@@ -115,6 +115,9 @@ vim.o.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
+-- Enable relative numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -594,8 +597,18 @@ require('lazy').setup({
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local lspconfig = require 'lspconfig'
+      vim.lsp.config('ts_ls', {
+        capabilities = capabilities,
+      })
 
-      -- Enable the following language servers
+      vim.lsp.enable 'ts_ls'
+
+      vim.lsp.config('kotlin_lsp', {
+        capabilities = capabilities,
+      })
+      vim.lsp.enable 'kotlin_lsp'
+      -- Enable the following lnguage servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
@@ -622,6 +635,9 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
+        'typescript-language-server',
+        'html-lsp',
+        'kotlin-language-server',
         -- You can add other tools here that you want Mason to install
       })
 
@@ -696,7 +712,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -876,11 +892,11 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
